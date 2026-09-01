@@ -1,0 +1,6 @@
+# Force LF line endings for shell scripts (prevents Windows CRLF from breaking Linux containers)
+*.sh text eol=lf
+
+# Force LF for common config files
+*.py text eol=lf
+Dockerfile text eol=lf
