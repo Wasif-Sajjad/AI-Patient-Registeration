@@ -1,17 +1,6 @@
 import os
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-
-def _normalize_db_url(url: str) -> str:
-    if not url:
-        raise ValueError(
-            "DATABASE_URL is empty or unset. Check your Railway variable reference."
-        )
-    if url.startswith("postgresql://"):
-        url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
-    elif url.startswith("postgres://"):
-        url = url.replace("postgres://", "postgresql+asyncpg://", 1)
-    return url
 
 
 class Settings(BaseSettings):
@@ -24,11 +13,22 @@ class Settings(BaseSettings):
     voice_webhook_secret: str = "mwstesting"
     allowed_origins: str = "*"
 
-    database_url: str = _normalize_db_url(
-        os.getenv("DATABASE_URL", "postgresql+asyncpg://voiceai:voiceai@db:5432/voiceai")
-    )
+    database_url: str = "postgresql+asyncpg://voiceai:voiceai@db:5432/voiceai"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_db_url(cls, v: str) -> str:
+        if not v:
+            raise ValueError(
+                "DATABASE_URL is empty or unset. Check your Railway variable reference."
+            )
+        if v.startswith("postgresql://"):
+            v = v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        elif v.startswith("postgres://"):
+            v = v.replace("postgres://", "postgresql+asyncpg://", 1)
+        return v
 
 
 settings = Settings()
