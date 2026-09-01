@@ -10,6 +10,11 @@ class Settings(BaseSettings):
     api_base_url: str = "http://localhost:8000"
     voice_webhook_secret: str = "mwstesting"
 
+    # CORS: comma-separated list of allowed origins for production.
+    # Example: ALLOWED_ORIGINS=https://cloudcare.vercel.app,https://my-ngrok-url.ngrok.app
+    # Defaults to wildcard for local development.
+    allowed_origins: str = "*"
+
     database_url: str = "postgresql+asyncpg://voiceai:voiceai@db:5432/voiceai"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

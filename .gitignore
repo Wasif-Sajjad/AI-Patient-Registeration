@@ -1,0 +1,25 @@
+# Ignore root level environment files
+.env
+.env.local
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# Backend
+backend/__pycache__/
+backend/.venv/
+backend/venv/
+backend/*.sqlite3
+
+# General
+.DS_Store
+Thumbs.db
+
+# Documentation & Instructions
+*.md
+!README.md
+*.pdf
+*instructions*

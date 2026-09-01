@@ -5,6 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from app.config import settings
 from app.routers import patients, voice
 
 logging.basicConfig(level=logging.INFO)
@@ -12,11 +13,15 @@ logger = logging.getLogger("voice_ai_patient_registration")
 
 app = FastAPI(title="Voice AI Patient Registration API", version="0.1.0")
 
-# Loosen this for production — allow the Next.js dashboard origin only.
+# Parse allowed origins: supports "*" or a comma-separated list of domains.
+_raw_origins = settings.allowed_origins.strip()
+_allowed_origins = ["*"] if _raw_origins == "*" else [o.strip() for o in _raw_origins.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
+    allow_origins=_allowed_origins,
+    allow_credentials=_raw_origins != "*",  # credentials only when not wildcard
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
