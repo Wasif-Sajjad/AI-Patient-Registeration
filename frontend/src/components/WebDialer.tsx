@@ -34,11 +34,12 @@ export default function WebDialer() {
   // ── Load SDK once + attach listeners ──────────────────────────────────────
   useEffect(() => {
     if (!VAPI_PUBLIC_KEY) {
-      setError("Missing NEXT_PUBLIC_VAPI_PUBLIC_KEY in frontend/.env.local");
+      setTimeout(() => setError("Missing NEXT_PUBLIC_VAPI_PUBLIC_KEY in frontend/.env.local"), 0);
       return;
     }
 
     if (_ready && _vapi) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUiReady(true);
       return;
     }
