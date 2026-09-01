@@ -1,3 +1,5 @@
+import os
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,7 +17,9 @@ class Settings(BaseSettings):
     # Defaults to wildcard for local development.
     allowed_origins: str = "*"
 
-    database_url: str = "postgresql+asyncpg://voiceai:voiceai@db:5432/voiceai"
+    database_url: str = os.getenv(
+        "DATABASE_URL", "postgresql+asyncpg://voiceai:voiceai@db:5432/voiceai"
+    )
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
